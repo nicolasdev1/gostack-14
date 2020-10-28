@@ -37,7 +37,7 @@ app.post('/repositories', (request, response) => {
 app.put("/repositories/:id", (request, response) => {
   const { id } = request.params
 
-  if (!isUuid(id)) return response.status(400).json({ message: 'ID inválido.' })
+  if (!isUuid(id)) return response.status(400).json({ error: 'Invalid ID.' })
 
   const {
     title,
@@ -48,7 +48,7 @@ app.put("/repositories/:id", (request, response) => {
   try {  
     const index = repositories.findIndex(repository => repository.id === id)
 
-    if (!repositories[index]) return response.status(400).json({ error: 'Repositório não encontrado.' })
+    if (!repositories[index]) return response.status(400).json({ error: 'Repository not found.' })
 
     const newRepository = {
       id,
@@ -72,7 +72,7 @@ app.delete("/repositories/:id", (request, response) => {
   try {
     const index = repositories.findIndex(repository => repository.id === id)
 
-    if (index === -1) return response.status(400).json({ message: 'Repositório não encontrado.' })
+    if (index === -1) return response.status(400).json({ error: 'Repository not found.' })
 
     repositories.splice(index, 1)
 
@@ -88,7 +88,7 @@ app.post("/repositories/:id/like", (request, response) => {
   try {
     const index = repositories.findIndex(repository => repository.id === id)
 
-    if (index === -1) return response.status(400).json({ message: 'Repositório não encontrado.' })
+    if (index === -1) return response.status(400).json({ error: 'Repository not found.' })
 
     const newRepository = {
       ...repositories[index],
