@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import api from './services/api'
 
@@ -16,8 +16,26 @@ export default function App() {
 
   async function handleLoadRepositories() {
     const response = await api.get('/repositories')
-
+  
+    console.log('get')
+  
     setRepositories(response.data)
+  }
+
+  async function handleCreateRepository() {
+    const data = {
+      title: 'nicolasdev1',
+      url: 'https://github.com/nicolasdev1/nicolasdev1',
+      techs: [
+        "ReactJS",
+        "Node.js",
+        "React Native"
+      ]
+    }
+
+    const response = await api.post('/repositories', data)
+
+    setRepositories([...repositories, response.data])
   }
 
   async function handleLikeRepository(id) {
@@ -28,7 +46,13 @@ export default function App() {
         repository.likes = repository.likes += 1
     })
 
-    setRepositories([...repositories])
+    setRepositories([ ...repositories ])
+  }
+
+  async function handleDeleteRepository(id) {
+    await api.delete(`/repositories/${id}`)
+
+    setRepositories(repositories.filter(repository => repository.id !== id))
   }
 
   useEffect(() => {
@@ -39,6 +63,12 @@ export default function App() {
     <>
       <StatusBar barStyle='light-content' backgroundColor='#7159c1' />
       <SafeAreaView style={styles.container}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleCreateRepository}
+        >
+          <Text style={[styles.buttonText, { marginBottom: 10, marginLeft: 10, backgroundColor: '#50c878', }]}>Adicionar</Text>
+        </TouchableOpacity>
         {repositories.map((repository, index) => (
           <View key={index} style={styles.repositoryContainer}>
             <Text style={styles.repository}>{repository.title}</Text>
@@ -68,6 +98,14 @@ export default function App() {
               testID={`like-button-${repository.id}`}
             >
               <Text style={styles.buttonText}>Curtir</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => handleDeleteRepository(repository.id)}
+
+              testID={`like-button-${repository.id}`}
+            >
+              <Text style={[styles.buttonText, { backgroundColor: '#9b111e', }]}>Remover</Text>
             </TouchableOpacity>
           </View>
         ))}
@@ -124,5 +162,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     backgroundColor: '#7159c1',
     padding: 15,
-  },
+  }
 })
