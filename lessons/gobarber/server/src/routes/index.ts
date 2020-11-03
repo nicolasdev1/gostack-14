@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 
 import appointmentsRouter from './appointments.routes'
 
