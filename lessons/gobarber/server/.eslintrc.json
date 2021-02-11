@@ -21,6 +21,8 @@
     "rules": {
       "semi": [2, "never"],
       "prettier/prettier": "error",
+      "class-methods-use-this": "off",
+      "comma-dangle": ["error", "never"],
       "import/extensions": [
         "error",
         "ignorePackages",
